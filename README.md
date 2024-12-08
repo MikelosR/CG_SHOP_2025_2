@@ -101,7 +101,7 @@ Step 2: cmake -DCGAL_DIR=/usr/lib/CGAL
 Step 3: make 
 Step 4: ./opt_triangulation -i tests/test_SA.json -o solution_output.json
 
-- ΠΡΟΣΟΧΗ! Δεν πρέπει να τρέξει η εντολή cgal_create_CMakeLists -s, το CMakeLists.txt στον υπάρχων φάκελο είναι το κατάλληλο και περιέχει τα κατάλληλα includes βιβλιοθηκών για το υπάρχον πρόγραμμα.
+- ΠΡΟΣΟΧΗ! Δεν πρέπει να τρέξει η εντολή cgal_create_CMakeLists -s, το CMakeLists.txt στον υπάρχον φάκελο είναι το κατάλληλο και περιέχει τα κατάλληλα includes βιβλιοθηκών για το υπάρχον πρόγραμμα.
 
 - ΠΡΟΣΟΧΗ! Τα input json files για την μέθοδο Simulated Annealing περιέχουν μια επιπλέον παράμετρο, το batch size το οποίο ο χρήστης δηλώνει
 τον αριθμό των "κακών" steiner points που δέχονται στην τριγωνοποίηση τους, μέχρι να δούμε βελτίωση στην τριγωνοποίηση.

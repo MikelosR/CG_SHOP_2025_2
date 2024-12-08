@@ -1348,10 +1348,8 @@ bool is_steiner_point(Vertex_handle vertex, const vector<Point_2>& original_poin
 }
 
 
-void output_file(value jv,
-            Custom_CDT custom_cdt,
-            vector<Point_2> original_points,
-            int obtuse_count)
+void output_file(value jv, Custom_CDT custom_cdt, vector<Point_2> original_points,
+            int obtuse_count, std_string output_path)
 {
     //Get instance_uid from input JSON
     std_string instance_uid = jv.as_object().at("instance_uid").as_string().c_str();
@@ -1448,7 +1446,7 @@ void output_file(value jv,
     json_output<<"}\n";
 
     // Write to file
-    std::ofstream output_file("solution_output.json");
+    std::ofstream output_file(output_path);
     output_file << json_output.str();
     output_file.close();
 

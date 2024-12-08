@@ -37,41 +37,8 @@ int main(int argc, char** argv) {
         cout<<"Check this pattern of terminal order: ./opt_triangulation -i /path/to/input.json -o /path/to/output.json"<<endl;
         return 1;
     }
-    //tests/test_Ants.json, tests/test_SA.json, tests/test_Local.json, tests/instance_test_6_local.json, tests/instance_test_7_local.json
-    //tests/instance_test_10_SA.json, tests/instance_test_11_SA.json, tests/instance_test_13_SA.json, tests/instance_test_14_Ants.json
-    //tests/instance_test_14_Ants.json, tests/instance_4_1_SA.json, tests/instance_5_1_SA.json, tests/instance_7_1_SA.json
-    //tests/instance_test_15_SA.json
+    //Check the names of the test cases in folder tests
     read_json(input_path, jv);
-    // REPLACE THE FOLLOWING LINE WITH ANY FROM THE FOLDER TESTS/TEST_DOC.TXT
-    //read_json("tests/test_Ants.json", jv);            //9 obtuses with Ants Colony
-
-    //read_json("tests/test_SA.json", jv);              //usually 0-3 obtuses with SA
-    //read_json("tests/test_Local.json", jv);           //7 obtuses Local Search
-    //read_json("tests/instance_test_1.json", jv);      //0 obtuses 100% success
-    //read_json("tests/instance_test_2.json", jv);      //0 obtuses 100% success
-    //read_json("tests/instance_test_3.json", jv);      //0 obtuse  100% success
-    //read_json("tests/instance_test_4.json", jv);      //0 obtuses 100% success
-    //read_json("tests/instance_test_5.json", jv);      //0 obtuses 100% success
-    //read_json("tests/instance_test_6_local.json", jv);      //2 obtuses
-    //read_json("tests/instance_test_7_local.json", jv);      //2 obtuseS
-    //read_json("tests/instance_test_8.json", jv);      //1 obtuse   80% success
-    //read_json("tests/instance_test_9.json", jv);      //1 obtuse   86% success
-    //read_json("tests/instance_test_10_SA.json", jv);     //0 obtuse   100% success with SA
-    //read_json("tests/instance_test_11_SA.json", jv);     //usually 0 obtuses  100% success with SA
-    //read_json("tests/instance_test_12.json", jv);     //0 obtuses 100% success
-    //read_json("tests/instance_test_13_SA.json", jv);     //0 obtuse   100% success with SA
-    //read_json("tests/instance_test_14_Ants.json", jv);     //2 obtuses success with Ants
-    //read_json("tests/instance_test_14_SA.json", jv);     //0-1 obtuses success with SA
-    //read_json("tests/instance_test_15.json", jv);     //2 obtuses  60% success
-    //read_json("tests/instance_test_16.json", jv);     //1 obtuse   80% success
-
-    //read_json("tests/instance_1_1.json", jv);         //0 obtuses 100% success
-    //read_json("tests/instance_2_1.json", jv);         //0 obtuses 100% success
-    //read_json("tests/instance_3_1.json", jv);         //0 obtuses 100% success
-    //read_json("tests/instance_4_1_SA.json", jv);         //0 obtuse 100% success with SA
-    //read_json("tests/instance_5_1_SA.json", jv);         //usually 0-6 obtuses with SA   
-    //read_json("tests/instance_6_1.json", jv);         //0 obtuses 100% success
-    //read_json("tests/instance_7_1_SA.json", jv);         //0 obtuse   100% success with SA
 
     vector<Point_2> points;
     vector<std::pair<int, int>> additional_constraints;
@@ -171,6 +138,7 @@ int main(int argc, char** argv) {
     double success;
     
     Custom_CDT simulated_cdt = custom_cdt;
+    //Run task1 if delaunay parameter is false
     if(!delaunay) {
         cout<<"Run task1"<<endl;
         run_task1(simulated_cdt, polygon);
@@ -212,7 +180,7 @@ int main(int argc, char** argv) {
     CGAL::draw(simulated_cdt);
     //print_polygon_edges(simulated_polygon);
     
-    // Calculate min_y and max_y
+    //Calculate min_y and max_y
     double min_y = std::numeric_limits<double>::max();
     double max_y = std::numeric_limits<double>::lowest();
 
@@ -230,12 +198,12 @@ int main(int argc, char** argv) {
     view.fitInView(view.scene()->sceneRect(), Qt::KeepAspectRatio);
     view.scale(1.5, 1.5);
 
-    double centerY = (min_y + max_y) / 2; // Calculate the center y position based on your points
+    double centerY = (min_y + max_y) / 2; //Calculate the center y position based on your points
     view.verticalScrollBar()->setValue(centerY);
     view.show();
     //////////// PHASE 3: JSON FILE OUTPUT //////////////////////////////
 
-    output_file(jv, simulated_cdt, points, obtuses_faces);
+    output_file(jv, simulated_cdt, points, obtuses_faces, output_path);
 
     return app.exec();
     //return 0;

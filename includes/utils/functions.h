@@ -108,7 +108,7 @@ Segment_2 find_longest_edge(const Face_handle& face);
 //JSON OUTPUT METHODS 
 bool is_steiner_point(Vertex_handle vertex, const vector<Point_2>& original_points);
 
-void output_file(value jv, Custom_CDT custom_cdt, vector<Point_2> points, int obtuse_count);
+void output_file(value jv, Custom_CDT custom_cdt, vector<Point_2> points, int obtuse_count, std_string output_path);
 
 std::string convert_to_string(const FT& coord);
 std::string format_double(double value);
