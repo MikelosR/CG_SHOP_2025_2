@@ -1,0 +1,6 @@
+/home/dre/Projects/Project6/CMakeFiles/CGAL_Qt5_moc_and_resources.dir
+/home/dre/Projects/Project6/CMakeFiles/opt_triangulation.dir
+/home/dre/Projects/Project6/CMakeFiles/edit_cache.dir
+/home/dre/Projects/Project6/CMakeFiles/rebuild_cache.dir
+/home/dre/Projects/Project6/CMakeFiles/CGAL_Qt5_moc_and_resources_autogen_timestamp_deps.dir
+/home/dre/Projects/Project6/CMakeFiles/CGAL_Qt5_moc_and_resources_autogen.dir
