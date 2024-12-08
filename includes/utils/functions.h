@@ -40,7 +40,6 @@ using Segment_2 = K::Segment_2;
 using Face_handle = Custom_CDT::Face_handle;
 using Vertex_handle = Custom_CDT::Vertex_handle;
 using std_string = std::string;
-//enum SteinerMethod {CIRCUMCENTER, MIDPOINT_LONGEST_EDGE, PROJECTION, ADJACENT_FACES, NUM_METHODS, CENTROID};
 typedef K::FT FT;
 
  
@@ -72,8 +71,8 @@ Point_2 find_obtuse_vertex(const Point_2& v1, const Point_2& v2, const Point_2& 
 //void insert_circumcenter_centroid(Custom_CDT& custom_cdt, const Face_handle& face, const Polygon& polygon, Point_2& circum_or_centroid);
 void insert_projection(Custom_CDT& custom_cdt, const Face_handle& face, Polygon& polygon, Point_2& in_projection, Segment_2& opposide_edge);
 void insert_midpoint(Custom_CDT& custom_cdt, const Face_handle& face, Polygon& polygon, Point_2& in_midpoint, Segment_2& longest_edge);
-bool insert_adjecent_steiner(Custom_CDT& custom_cdt, const Face_handle& face, const Polygon& polygon, Point_2& adjecent_steiner);
-void insert_adjecent_steiner_local_search(Custom_CDT& custom_cdt, const Face_handle& face1, const Polygon& polygon, Point_2& adjecent_steiner);
+bool insert_adjacent_steiner(Custom_CDT& custom_cdt, const Face_handle& face, const Polygon& polygon, Point_2& adjacent_steiner);
+void insert_adjacent_steiner_local_search(Custom_CDT& custom_cdt, const Face_handle& face1, const Polygon& polygon, Point_2& adjacent_steiner);
 bool insert_circumcenter(Custom_CDT& circumcenter_cdt, const Face_handle& face, const Polygon& polygon, Point_2& circumcenter_steiner);
 void insert_centroid(Custom_CDT& centroid_cdt, const Face_handle& face, const Polygon& polygon, Point_2& centroid_steiner);
 
@@ -84,7 +83,6 @@ void ant_colony(Custom_CDT& custom_cdt, Polygon& polygon, const double& alpha, c
 
 bool should_accept_transition(const double deltaE,const double T);
 double calculate_energy(const int obtuse_faces, const int steiner_points, const double alpha, const double beta);
-void checkcheck_adjecent_steiner(Custom_CDT& custom_cdt, const Polygon& polygon);
 
 //If the steiner inserted in the boundary of polygon, update the polygon.
 //Take the steiner, and the edge (point1, point2) that we insert the steiner in cdt
@@ -115,21 +113,11 @@ void output_file(value jv, Custom_CDT custom_cdt, vector<Point_2> points, int ob
 std::string convert_to_string(const FT& coord);
 std::string format_double(double value);
 
-//WE US IT ONLY FOR THE PRINTS
-void return_obtuse_triangles(CDT& cdt, const Polygon& polygon, vector<tuple<Point_2, Face_handle, double>>& obtuse_points);
-
 pair<Point_2, double> find_obtuse_vertex_and_angle(const Point_2& v1, const Point_2& v2, const Point_2& v3);
-
-std::optional<Point_2> find_obtuse_vertex2(const Point_2& a, const Point_2& b, const Point_2& c);
-
 Point_2 compute_centroid(const vector<Point_2>& points);
-
-void mini_adjecent(Custom_CDT& custom_cdt, const Polygon& polygon);
-void insert_steiner_for_connected_obtuses(Custom_CDT& custom_cdt, const Polygon& polygon);
 int count_vertices(const Custom_CDT& cdt);
 void print_polygon_edges(const Polygon& polygon);
 bool is_circumcenter_in_neighbor(const Custom_CDT& cdt, const Face_handle& face, const Point_2& circumcenter);
-
 double calculate_radius_to_height(const Face_handle& face, const Custom_CDT& cdt);
 double hta_vertex_projection(double rho);
 double hta_circumcenter(double rho);

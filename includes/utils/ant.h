@@ -14,7 +14,6 @@ using Polygon = CGAL::Polygon_2<K>;
 using Point_2 = K::Point_2;
 using Face_handle = Custom_CDT::Face_handle;
 using Segment_2 = K::Segment_2;
-//enum SteinerMethod {CIRCUMCENTER, MIDPOINT_LONGEST_EDGE, PROJECTION, ADJACENT_FACES, NUM_METHODS, CENTROID};
 #include "steiner_method.h"
 
 
@@ -26,8 +25,6 @@ public:
     explicit Ant(const Custom_CDT& initial_cdt);
     Ant(const Ant& other_ant);
     void set_steiner(const Point_2& in_ant_steiner_point);
-    //void insert_steiner(const Point_2& in_ant_steiner_point, Polygon& polygon);
-    //void affected_faces(Custom_CDT& best_cdt);
     void set_face_in_ant_affect_faces(const Face_handle& face);
     void set_steiner_method(SteinerMethod in_method);
     void set_energy(double in_energy);

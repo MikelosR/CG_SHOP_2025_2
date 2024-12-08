@@ -643,9 +643,4 @@ void run_task1(Custom_CDT& custom_cdt, Polygon& polygon){
         else progress = false;
         if(end == 0) break;
     }
-    cout<<"**Final number of obtuses: "<<count_obtuse_triangles_1(custom_cdt, polygon)<<" **"<<endl;
-    double success;
-    if(init_obtuses > 0) success = ((double)end/(double)init_obtuses)*100;
-    cout<<100-success<<"%"<<" reduction success the obtuse triangles"<<endl;
-    CGAL::draw(custom_cdt);
 }

@@ -8,18 +8,15 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/dre/Projects/Project6/includes/utils/ant.cpp" "CMakeFiles/opt_triangulation.dir/includes/utils/ant.cpp.o" "gcc" "CMakeFiles/opt_triangulation.dir/includes/utils/ant.cpp.o.d"
-  "/home/dre/Projects/Project6/includes/utils/functions.cpp" "CMakeFiles/opt_triangulation.dir/includes/utils/functions.cpp.o" "gcc" "CMakeFiles/opt_triangulation.dir/includes/utils/functions.cpp.o.d"
-  "/home/dre/Projects/Project6/includes/utils/functions_task1.cpp" "CMakeFiles/opt_triangulation.dir/includes/utils/functions_task1.cpp.o" "gcc" "CMakeFiles/opt_triangulation.dir/includes/utils/functions_task1.cpp.o.d"
-  "/home/dre/Projects/Project6/project.cpp" "CMakeFiles/opt_triangulation.dir/project.cpp.o" "gcc" "CMakeFiles/opt_triangulation.dir/project.cpp.o.d"
+  "/home/mikelos/Projects/CG_SHOP_2025_2/includes/utils/ant.cpp" "CMakeFiles/opt_triangulation.dir/includes/utils/ant.cpp.o" "gcc" "CMakeFiles/opt_triangulation.dir/includes/utils/ant.cpp.o.d"
+  "/home/mikelos/Projects/CG_SHOP_2025_2/includes/utils/functions.cpp" "CMakeFiles/opt_triangulation.dir/includes/utils/functions.cpp.o" "gcc" "CMakeFiles/opt_triangulation.dir/includes/utils/functions.cpp.o.d"
+  "/home/mikelos/Projects/CG_SHOP_2025_2/includes/utils/functions_task1.cpp" "CMakeFiles/opt_triangulation.dir/includes/utils/functions_task1.cpp.o" "gcc" "CMakeFiles/opt_triangulation.dir/includes/utils/functions_task1.cpp.o.d"
+  "/home/mikelos/Projects/CG_SHOP_2025_2/project.cpp" "CMakeFiles/opt_triangulation.dir/project.cpp.o" "gcc" "CMakeFiles/opt_triangulation.dir/project.cpp.o.d"
   )
 
-# Targets to which this target links which contain Fortran sources.
-set(CMAKE_Fortran_TARGET_LINKED_INFO_FILES
-  )
-
-# Targets to which this target links which contain Fortran sources.
-set(CMAKE_Fortran_TARGET_FORWARD_LINKED_INFO_FILES
+# Targets to which this target links.
+set(CMAKE_TARGET_LINKED_INFO_FILES
+  "/home/mikelos/Projects/CG_SHOP_2025_2/CMakeFiles/CGAL_Qt5_moc_and_resources.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

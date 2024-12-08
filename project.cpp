@@ -163,21 +163,24 @@ int main(int argc, char** argv) {
         custom_cdt.insert_constraint(points[constraint.first], points[constraint.second]);
     }
 //////////// PHASE 2: FLIPS & STEINER POINTS //////////////////////////////
-
-    Custom_CDT simulated_cdt = custom_cdt;
-    if(!delaunay) {
-        cout<<"Run task1"<<endl;
-        run_task1(simulated_cdt, polygon);
-    }
-
-    simulated_polygon = polygon;
-
-    int obtuses_faces = count_obtuse_triangles(simulated_cdt, polygon);
+    int obtuses_faces = count_obtuse_triangles(custom_cdt, polygon);
     int init_obtuse_faces = obtuses_faces;
     int initial_vertexes = count_vertices(custom_cdt);
     cout<<"Initial number of obtuses: "<<obtuses_faces<<endl;
     cout<<"Initial number of vertexes: "<<initial_vertexes<<endl;
     double success;
+    
+    Custom_CDT simulated_cdt = custom_cdt;
+    if(!delaunay) {
+        cout<<"Run task1"<<endl;
+        run_task1(simulated_cdt, polygon);
+        obtuses_faces = count_obtuse_triangles(simulated_cdt, polygon);
+        cout<<"Sum of steiners after task 1: "<<count_vertices(simulated_cdt) - initial_vertexes<<endl;
+        if(init_obtuse_faces > 0) success = ((double)obtuses_faces/(double)init_obtuse_faces)*100;
+        cout<<100-success<<"%"<<" obtuse triangles reduction success after task 1"<<endl;
+    }
+
+    simulated_polygon = polygon;
 
     //Flips
     start_the_flips(simulated_cdt, simulated_polygon);
@@ -198,7 +201,6 @@ int main(int argc, char** argv) {
     //Ant Colony
     if(run_Ant_Colony){
         cout<<"Ant Colony is starting.. "<<endl;
-        //CGAL::draw(simulated_cdt);
         ant_colony(simulated_cdt, simulated_polygon, alpha, beta, chi, psi, lamda , L, kappa);
         cout <<"**Number of Obtuses after from Ant Colony: "<<count_obtuse_triangles(simulated_cdt, simulated_polygon)<<" **"<<endl;
     }
@@ -207,8 +209,7 @@ int main(int argc, char** argv) {
     if(init_obtuse_faces > 0) success = ((double)obtuses_faces/(double)init_obtuse_faces)*100;
     cout<<100-success<<"%"<<" obtuse triangles reduction success"<<endl;
     cout<<"Final form of Custom CDT "<<endl;
-    //CGAL::draw(simulated_cdt);
-   
+    CGAL::draw(simulated_cdt);
     //print_polygon_edges(simulated_polygon);
     
     // Calculate min_y and max_y
@@ -232,16 +233,6 @@ int main(int argc, char** argv) {
     double centerY = (min_y + max_y) / 2; // Calculate the center y position based on your points
     view.verticalScrollBar()->setValue(centerY);
     view.show();
-
-    /*vector<tuple<Point_2, Face_handle, double>> obtuse_points;
-    return_obtuse_triangles(custom_cdt, polygon, obtuse_points);
-    int i = 1;
-    for (const auto& [obtuse_point, face, angle] : obtuse_points) {
-        cout<<i<<"==> "<<"Obtuse point: "<<obtuse_point<<" with angle: "<<angle<<" degrees"<<endl;
-        cout<<"Triangle vertices: "<<face->vertex(0)->point()<<", "<<face->vertex(1)->point()<<", "<<face->vertex(2)->point()<<endl;
-        cout<<"++++++++++++++++++++++++++++++++++++++++++++++++++"<<endl;
-        i++;
-    }*/
     //////////// PHASE 3: JSON FILE OUTPUT //////////////////////////////
 
     output_file(jv, simulated_cdt, points, obtuses_faces);

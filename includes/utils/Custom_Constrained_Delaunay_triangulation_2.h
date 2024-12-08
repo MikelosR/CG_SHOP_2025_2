@@ -68,8 +68,12 @@ public:
 
         this->Base::Ctr::remove(v);
 
-    }*/
+    }
 
+     void remove_constraint_no_flip(Face_handle f, int i){
+        this->Base::Ctr::remove_constrained_edge(f, i);
+    }*/
+    
     // Another insert method with known location
 
     Vertex_handle insert_no_flip(const Point& a, Locate_type lt, Face_handle loc, int li) {
@@ -79,13 +83,6 @@ public:
         return va;
 
     }
-
-    void remove_no_flip(Vertex_handle v) {
-
-        this->Base::Ctr::remove(v);
-
-    }
-
 };
 
 

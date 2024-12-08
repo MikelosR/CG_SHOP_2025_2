@@ -39,13 +39,13 @@ bool is_obtuse2(const Point_2& a, const Point_2& b, const Point_2& c) {
 }
 
 //Read JSON file
-void read_json(const std::string& filename, value& jv) {
+void read_json(const std_string& filename, value& jv) {
     std::ifstream file(filename);
     if (!file) {
         std::cerr << "Error opening file: " << filename <<endl;
         return;
     }
-    std::string json_str((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    std_string json_str((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     jv = parse(json_str);
 }
 
@@ -61,29 +61,6 @@ int count_obtuse_triangles(CDT& cdt, const Polygon& polygon) {
     return obtuse_count;
 }
 
-//WE USE IT ONLY FOR THE PRINTS
-void return_obtuse_triangles(CDT& cdt, const Polygon& polygon, vector<tuple<Point_2, Face_handle, double>>& obtuse_points) {
-    for (auto fit = cdt.finite_faces_begin(); fit != cdt.finite_faces_end(); ++fit) {
-        Point_2 p1 = fit->vertex(0)->point();
-        Point_2 p2 = fit->vertex(1)->point();
-        Point_2 p3 = fit->vertex(2)->point();
-
-        if (is_obtuse(fit)){
-
-            bool is_within = 
-                polygon.bounded_side(CGAL::midpoint(p1, p2)) != CGAL::ON_UNBOUNDED_SIDE && 
-                polygon.bounded_side(CGAL::midpoint(p1, p3)) != CGAL::ON_UNBOUNDED_SIDE && 
-                polygon.bounded_side(CGAL::midpoint(p2, p3)) != CGAL::ON_UNBOUNDED_SIDE;
-                
-            if (is_within) {
-                // Find the obtuse vertex and its angle
-                auto [obtuse_vertex, angle] = find_obtuse_vertex_and_angle(p1, p2, p3);
-                obtuse_points.push_back(make_tuple(obtuse_vertex, fit, angle));
-            }
-        }
-        
-    }
-}
 
 //Return true if 2 faces (two triangles) form a convex polygon
 bool is_convex(const Point_2& p1, const Point_2& p2, const Point_2& p3, const Point_2& p4) {
@@ -200,8 +177,8 @@ void insert_midpoint(Custom_CDT& custom_cdt, const Face_handle& face, Polygon& p
     }  
 }
 
-bool insert_adjecent_steiner(Custom_CDT& custom_cdt, const Face_handle& face1, const Polygon& polygon, Point_2& adjacent_steiner) {
-    //Before calling insert_adjecent_steiner, we know that the face1 is obtuse face
+bool insert_adjacent_steiner(Custom_CDT& custom_cdt, const Face_handle& face1, const Polygon& polygon, Point_2& adjacent_steiner) {
+    //Before calling insert_adjacent_steiner, we know that the face1 is obtuse face
     if (!has_obtuse_neighbors(custom_cdt, face1, polygon)) return false;
     std::set<Point_2> unique_points;        //Collect all unique vertices of obtuse neighbors
     std::queue<Face_handle> face_queue;     //For BFS traversal
@@ -273,10 +250,8 @@ bool insert_adjecent_steiner(Custom_CDT& custom_cdt, const Face_handle& face1, c
     
 }
 
-void insert_adjecent_steiner_local_search(Custom_CDT& custom_cdt, const Face_handle& face1, const Polygon& polygon, Point_2& adjecent_steiner) {
-    //we have check it in the local search
-    //if (!is_face_inside_region(face1, polygon)) return;
-    //if (!has_obtuse_neighbors(custom_cdt, face1, polygon)) return false;
+//Adhjacent steiner method only for local search
+void insert_adjacent_steiner_local_search(Custom_CDT& custom_cdt, const Face_handle& face1, const Polygon& polygon, Point_2& adjacent_steiner) {
     std::set<Point_2> unique_points;
     unsigned int initial_obtuse_count = count_obtuse_triangles(custom_cdt, polygon);
     unsigned int best_obtuse_count = initial_obtuse_count;
@@ -285,7 +260,7 @@ void insert_adjecent_steiner_local_search(Custom_CDT& custom_cdt, const Face_han
     Point_2 v1 = face1->vertex(1)->point();
     Point_2 v2 = face1->vertex(2)->point();
     Point_2 best_steiner_point = CGAL::centroid(v0, v1, v2);
-    adjecent_steiner = best_steiner_point;
+    adjacent_steiner = best_steiner_point;
     //Use a queue to perform BFS-like traversal
     std::queue<Face_handle> face_queue;
     std::set<Face_handle> visited_faces;
@@ -333,10 +308,10 @@ void insert_adjecent_steiner_local_search(Custom_CDT& custom_cdt, const Face_han
         
             //Change the best_steiner_point and update the best_obtuse_count if worth it
             if((simulated_obtuse_count < best_obtuse_count) && is_polygon_convex(unique_points)){
-                //Update best_obtuse_count, best_steiner_point, adjecent_steiner
+                //Update best_obtuse_count, best_steiner_point, adjacent_steiner
                 best_obtuse_count = simulated_obtuse_count;
                 best_steiner_point = curent_steiner_point;
-                adjecent_steiner = best_steiner_point;
+                adjacent_steiner = best_steiner_point;
                 custom_cdt.insert_no_flip(best_steiner_point);
                 start_the_flips(custom_cdt, polygon);
             }
@@ -368,9 +343,9 @@ void local_search(Custom_CDT& custom_cdt, Polygon& polygon, int& L){
                 Custom_CDT cdt_circum = custom_cdt;
                 Custom_CDT cdt_midpoint = custom_cdt;
                 Custom_CDT cdt_projection = custom_cdt;
-                Custom_CDT cdt_adjecent = custom_cdt;
+                Custom_CDT cdt_adjacent = custom_cdt;
                 Custom_CDT cdt_centroid = custom_cdt;
-                vector<Custom_CDT> cdt_variants = {cdt_circum, cdt_midpoint, cdt_projection, cdt_adjecent, cdt_centroid};
+                vector<Custom_CDT> cdt_variants = {cdt_circum, cdt_midpoint, cdt_projection, cdt_adjacent, cdt_centroid};
                 vector<Point_2> steiner_points(5);
                 //Midpoint edge: We need this edge to check if the steiner was entered on the boundary
                 Segment_2 longest_edge;
@@ -381,7 +356,7 @@ void local_search(Custom_CDT& custom_cdt, Polygon& polygon, int& L){
                 if(!insert_circumcenter(cdt_variants[0], face, polygon, steiner_points[0])) dont_use_circumcenter = true;
                 insert_midpoint(cdt_variants[1], face, polygon, steiner_points[1], longest_edge);
                 insert_projection(cdt_variants[2], face, polygon, steiner_points[2], opposide_edge);
-                insert_adjecent_steiner_local_search(cdt_variants[3], face, polygon, steiner_points[3]);
+                insert_adjacent_steiner_local_search(cdt_variants[3], face, polygon, steiner_points[3]);
                 insert_centroid(cdt_variants[4], face, polygon, steiner_points[4]);
 
                 //Vector to store obtuse counts
@@ -427,6 +402,7 @@ bool should_accept_transition(const double deltaE,const double T) {
     return probability >= R;
 }
 
+//Simualated annealing method
 void simulated_annealing(Custom_CDT& custom_cdt, Polygon& polygon, int max_iterations, const double& alpha, const double& beta, const int& batch_size){
     int obtuse_faces = count_obtuse_triangles(custom_cdt, polygon);
     int init_vertices = count_vertices(custom_cdt);
@@ -447,6 +423,7 @@ void simulated_annealing(Custom_CDT& custom_cdt, Polygon& polygon, int max_itera
     while(progress){
         progress = false;
         start = count_obtuse_triangles(best_cdt, polygon);
+        if(start == 0) break;
         T = 1.0;
         num_of_transition = 0;
         start_the_flips(best_cdt, polygon);
@@ -475,8 +452,8 @@ void simulated_annealing(Custom_CDT& custom_cdt, Polygon& polygon, int max_itera
                     case 1: insert_midpoint(simulate_cdt, face, polygon, steiner_point, longest_edge); break;
                     case 2: insert_projection(simulate_cdt, face, polygon, steiner_point, opposite_edge); break;
                     case 3:
-                        //If the polygon of the adjecent steiner is not convex or if the face has no obtuse neighbors, skip the face
-                        is_polygon_convex = insert_adjecent_steiner(simulate_cdt, face, polygon, steiner_point);
+                        //If the polygon of the adjacent steiner is not convex or if the face has no obtuse neighbors, skip the face
+                        is_polygon_convex = insert_adjacent_steiner(simulate_cdt, face, polygon, steiner_point);
                         if((!is_polygon_convex)){
                             simulate_cdt = custom_cdt;
                             insert_projection(simulate_cdt, face, polygon, steiner_point, opposite_edge);
@@ -565,7 +542,7 @@ void ant_colony(Custom_CDT& custom_cdt, Polygon& polygon, const double& alpha, c
     int best_num_steiner = 0, best_obtuse_faces = obtuse_faces, counter_steiner = 0;
     int count_ants = kappa;
     cout<<"Num of ants: "<<count_ants<<endl;
-    bool obtuse_neighbors = false, can_we_use_adjecent = false;
+    bool obtuse_neighbors = false, can_we_use_adjacent = false;
     double ro = 0.0;
       
     //Midpoint edge: We need this edge to check if the steiner was entered on the boundary
@@ -636,10 +613,10 @@ void ant_colony(Custom_CDT& custom_cdt, Polygon& polygon, const double& alpha, c
                 case 1: insert_midpoint(curent_cdt, face, polygon, curent_steiner_point, longest_edge); break;
                 case 2: insert_projection(curent_cdt, face, polygon, curent_steiner_point, opposite_edge); break;
                 case 3:
-                    //If the face has obtuse neighbor(s) and the polygon of adjecent points is convex, then insert the adjecent steiner
-                    can_we_use_adjecent = insert_adjecent_steiner(curent_cdt, face, polygon, curent_steiner_point);
+                    //If the face has obtuse neighbor(s) and the polygon of adjacent points is convex, then insert the adjacent steiner
+                    can_we_use_adjacent = insert_adjacent_steiner(curent_cdt, face, polygon, curent_steiner_point);
                     //obtuse_neighbors = has_obtuse_neighbors(curent_cdt, face, polygon);
-                    if((!can_we_use_adjecent)){
+                    if((!can_we_use_adjacent)){
                         curent_cdt = best_cdt;
                         insert_projection(curent_cdt, face, polygon, curent_steiner_point, opposite_edge);
                         //insert_centroid(curent_cdt, face, polygon, curent_steiner_point); 
@@ -885,7 +862,6 @@ void printAntDetails(vector<Ant>& ants) {
     }
 }
 
-
 SteinerMethod selectSteinerMethod(const double& ro, const vector<double>& taf, vector<double>& hta, double chi, double psi, bool obtuse_neighbors) {
     //Ensure inputs are valid
     if (taf.size() != SteinerMethod::NUM_METHODS || hta.size() != SteinerMethod::NUM_METHODS) {
@@ -1075,6 +1051,32 @@ bool insert_circumcenter(Custom_CDT& circumcenter_cdt, const Face_handle& face, 
     else return false;
 }
 
+//Check if the circumcenter is on side of a neighbor or not
+bool is_circumcenter_in_neighbor(const Custom_CDT& cdt, const Face_handle& face, const Point_2& circumcenter) {
+    for (int i = 0; i < 3; ++i) {
+        Face_handle neighbor_face = face->neighbor(i);
+
+        //Skip invalid or infinite neighbors
+        if (cdt.is_infinite(neighbor_face)) continue;
+
+        //Get vertices of the neighbor face
+        Point_2 v1 = neighbor_face->vertex(0)->point();
+        Point_2 v2 = neighbor_face->vertex(1)->point();
+        Point_2 v3 = neighbor_face->vertex(2)->point();
+
+        //Create a Triangle_2 object
+        CGAL::Triangle_2<Custom_CDT::Geom_traits> triangle(v1, v2, v3);
+
+        //Check if the circumcenter is inside or on the boundary of the triangle
+        CGAL::Bounded_side side = triangle.bounded_side(circumcenter);
+        if (side == CGAL::ON_BOUNDED_SIDE || side == CGAL::ON_BOUNDARY) {
+            return true; //Circumcenter is inside or on the boundary of the neighbor face
+        }
+    }
+
+    return false; //Circumcenter is not in or on any neighbor face
+}
+
 //Ιnsert Steiner points at centroid
 void insert_centroid(Custom_CDT& centroid_cdt, const Face_handle& face, const Polygon& polygon, Point_2& centroid_steiner) {       
     Point_2 p1 = face->vertex(0)->point();
@@ -1108,44 +1110,6 @@ void update_polygon(Polygon& polygon, const Point_2& steiner_point, const Point_
     }
 }
 
-//If we added a Steiner point on the boundary of the polygon, update the new edges of the polygon
-/*void update_polygon(Polygon& polygon, const Point_2& steiner_point, const Point_2& p1, const Point_2& p2) {
-    //Ensure the Steiner point is on the boundary of the polygon
-    if (polygon.bounded_side(steiner_point) != CGAL::ON_BOUNDARY) {
-        return; //The Steiner point is not on the polygon boundary, no update needed
-    }
-    
-
-    //Iterate through the polygon's vertices to find the edge (p1, p2)
-    auto it = polygon.vertices_begin();
-    for (; it != polygon.vertices_end(); ++it) {
-        auto next_it = std::next(it);
-        if (next_it == polygon.vertices_end()) {
-            next_it = polygon.vertices_begin(); //Wrap around for closed polygon
-        }
-
-        //Check if the current edge matches (p1, p2)
-        if ((*it == p1 && *next_it == p2) || (*it == p2 && *next_it == p1)) {
-            //Ensure the Steiner point is on the segment (p1, p2)
-            if (!CGAL::collinear_are_ordered_along_line(p1, steiner_point, p2)) {
-                std::cerr << "Error: Steiner point is not precisely on the edge (" 
-                          << p1.x() << ", " << p1.y() << ") -> (" 
-                          << p2.x() << ", " << p2.y() << ")" << std::endl;
-                return;
-            }
-
-            //Insert the Steiner point between the vertices
-            polygon.insert(next_it, steiner_point); // Insert before next_it
-            return; //Exit after successful insertion
-        }
-    }
-
-    //If no matching edge is found
-    std::cerr << "Error: Edge (" << p1.x() << ", " << p1.y() << ") -> (" 
-              << p2.x() << ", " << p2.y() << ") not found in the polygon." << std::endl;
-}*/
-
-
 //Return the number of vertices in a cdt
 int count_vertices(const Custom_CDT& cdt) {
     int count = 0;
@@ -1153,32 +1117,6 @@ int count_vertices(const Custom_CDT& cdt) {
         ++count;
     }
     return count;
-}
-
-
-bool is_circumcenter_in_neighbor(const Custom_CDT& cdt, const Face_handle& face, const Point_2& circumcenter) {
-    for (int i = 0; i < 3; ++i) {
-        Face_handle neighbor_face = face->neighbor(i);
-
-        //Skip invalid or infinite neighbors
-        if (cdt.is_infinite(neighbor_face)) continue;
-
-        //Get vertices of the neighbor face
-        Point_2 v1 = neighbor_face->vertex(0)->point();
-        Point_2 v2 = neighbor_face->vertex(1)->point();
-        Point_2 v3 = neighbor_face->vertex(2)->point();
-
-        //Create a Triangle_2 object
-        CGAL::Triangle_2<Custom_CDT::Geom_traits> triangle(v1, v2, v3);
-
-        //Check if the circumcenter is inside or on the boundary of the triangle
-        CGAL::Bounded_side side = triangle.bounded_side(circumcenter);
-        if (side == CGAL::ON_BOUNDED_SIDE || side == CGAL::ON_BOUNDARY) {
-            return true; //Circumcenter is inside or on the boundary of the neighbor face
-        }
-    }
-
-    return false; //Circumcenter is not in or on any neighbor face
 }
 
 //Just simulate if insert centroid (and auto flips) we reduce the obtuses
@@ -1197,7 +1135,7 @@ bool worth_insert_centroid(Custom_CDT& custom_cdt, const Point_2& centroid, cons
     else return false;
 }
 
-
+//Flips method
 void start_the_flips(Custom_CDT& cdt, const Polygon& polygon){
     bool progress = true;
     while(progress){
@@ -1294,7 +1232,6 @@ bool is_edge_inside_region(const Point_2& p1, const Point_2& p2, const Polygon& 
 
 
 //Function to check if an edge is part of the boundary of the polygon
-//SOOS CHECK IF WE DONT UPDATE WITH PROPER WAY THE POLYGON
 bool is_edge_on_boundary(const Point_2& p1, const Point_2& p2, const Polygon& polygon) {
     for (auto edge_it = polygon.edges_begin(); edge_it != polygon.edges_end(); ++edge_it) {
         if ((edge_it->source() == p1 && edge_it->target() == p2) ||
@@ -1317,18 +1254,6 @@ Point_2 find_obtuse_vertex(const Point_2& v1, const Point_2& v2, const Point_2& 
     if (ac2 + bc2 < ab2) return v3; // obtuse angle at v3
 
     throw logic_error("No obtuse angle found in the triangle.");
-}
-
-std::optional<Point_2> find_obtuse_vertex2(const Point_2& a, const Point_2& b, const Point_2& c) {
-    if (CGAL::angle(a, b, c) == CGAL::OBTUSE) {
-        return a; // angle at vertex A
-    } else if (CGAL::angle(b, a, c) == CGAL::OBTUSE) {
-        return b; // angle at vertex B
-    } else if (CGAL::angle(a, c, b) == CGAL::OBTUSE) {
-        return c; // angle at vertex C
-    }
-    //This approach allows the caller to check if an obtuse angle exists
-    return std::nullopt; // No obtuse angle found
 }
 
 
@@ -1411,46 +1336,8 @@ bool is_polygon_convex(const std::set<Point_2>& unique_points) {
     //A polygon is convex if all its points are part of its convex hull
     if (convex_hull_points.size() != points.size()) {
         return false;
-    }
-    //Check if the polygon is convex
-    //return CGAL::is_convex_2(points.begin(), points.end(), K());
+    }    
     return true;
-}
-
-void check_adjacent_steiner(Custom_CDT& custom_cdt, const Polygon& polygon){
-    bool progress = true;
-    while(progress){
-        progress = false;
-        for (auto face = custom_cdt.finite_faces_begin(); face != custom_cdt.finite_faces_end(); ++face){
-            if (!is_obtuse(face)) continue;
-            unsigned int num_of_obtuses = count_obtuse_triangles(custom_cdt, polygon);
-            if(num_of_obtuses == 0){
-                progress = false;
-                break;
-            }
-
-            if (is_obtuse(face)) {
-                Custom_CDT cdt_adjecent = custom_cdt;
-                Point_2 adjecent_point;
-                insert_adjecent_steiner(cdt_adjecent, face, polygon, adjecent_point);
-                unsigned int count_sim = count_obtuse_triangles(cdt_adjecent, polygon);
-                //cout<<"CDT cdt obtuses: "<<count_obtuse_triangles(custom_cdt, polygon)<<endl;
-                //cout<<"Simulate cdt obtuses: "<<count_sim<<endl;
-                if (count_sim < num_of_obtuses){
-                    cout<<"Simulate cdt obtuses: "<<count_sim<<endl;
-                    cout<<"CDT BEFORE "<<endl;
-                    CGAL::draw(custom_cdt);
-                    custom_cdt.insert_no_flip(adjecent_point);
-                    start_the_flips(custom_cdt, polygon);
-                    cout<<"CDT AFTER "<<endl;
-                    cout<<"Steiner adding: "<<adjecent_point<<endl;
-                    CGAL::draw(custom_cdt);
-                    progress = true;
-                    break;
-                }
-            }
-        }
-    }
 }
 
 //Function to check if a vertex in custom_cdt is a Steiner point
@@ -1569,7 +1456,7 @@ void output_file(value jv,
 }
 
 //Function to format double values as strings
-std::string format_double(double value) {
+std_string format_double(double value) {
     std::ostringstream oss;
     oss.precision(1); // Adjust precision if necessary
     oss << std::fixed << value; // Use fixed-point notation
@@ -1577,7 +1464,7 @@ std::string format_double(double value) {
 }
 
 //Convert coord into string like franction. If it is int, return string like int
-std::string convert_to_string(const K::FT& coord) {
+std_string convert_to_string(const K::FT& coord) {
     const auto exact_coord = CGAL::exact(coord);
     std::ostringstream oss;
      // Check if the coordinate is an integer

@@ -42,6 +42,6 @@
         [6,9],
         [4,9]],
     "method": "sa", 
-    "parameters": {"alpha": 2.4, "beta": 0.2, "L": 1750, "batch_size": 5 }, 
+    "parameters": {"alpha": 2.4, "beta": 0.2, "L": 1650, "batch_size": 5 }, 
     "delaunay": true
 }

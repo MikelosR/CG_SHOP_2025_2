@@ -25,6 +25,6 @@
     "num_constraints": 0,
     "additional_constraints": [],
     "method": "ant", 
-    "parameters": {"alpha": 2.4, "beta": 0.2, "xi": 1.0, "psi": 3.0, "lambda": 0.5, "kappa": 10, "L": 40},
+    "parameters": {"alpha": 2.4, "beta": 0.2, "xi": 1.0, "psi": 3.0, "lambda": 0.5, "kappa": 3, "L": 40},
     "delaunay": false 
 }
