@@ -1,31 +1,9 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
-#include <CGAL/Exact_predicates_exact_constructions_kernel.h>
-#include <CGAL/Constrained_Delaunay_triangulation_2.h>
-#include <CGAL/draw_triangulation_2.h>
-#include <iostream>
-#include <vector>
-#include <stdio.h>
-#include <boost/json.hpp>
-#include <fstream>
-#include <set>
-#include <string>
-#include <cmath>
-#include <CGAL/convex_hull_2.h>
-#include <CGAL/Polygon_2.h>
-#include "includes/utils/Custom_Constrained_Delaunay_triangulation_2.h"
-#include <CGAL/Line_2.h>
-#include <CGAL/squared_distance_2.h>
-#include <CGAL/number_utils.h>
-#include <CGAL/Polygon_2_algorithms.h>
-#include <optional>
-#include <random>
+#include "libraries.h"
 #include "ant.h"
-#include "steiner_method.h"
 
-class Ant;
 
 using namespace boost::json;
 using namespace std;

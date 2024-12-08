@@ -2,8 +2,9 @@
 #ifndef LIBRARIES_H
 #define LIBRARIES_H
 
+#include "Custom_Constrained_Delaunay_triangulation_2.h"
+
 //CGAL headers
-#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Exact_predicates_exact_constructions_kernel.h>
 #include <CGAL/Constrained_Delaunay_triangulation_2.h>
 #include <CGAL/draw_triangulation_2.h>
@@ -28,4 +29,17 @@
 //Other libraries
 #include <stdio.h>
 
+
+
+enum SteinerMethod {
+    CIRCUMCENTER,
+    MIDPOINT_LONGEST_EDGE,
+    PROJECTION,
+    ADJACENT_FACES,
+    NUM_METHODS,
+    CENTROID
+};
+
 #endif
+
+

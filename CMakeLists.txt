@@ -54,7 +54,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 # Creating entries for target: project
 # ############################
 
-add_executable(opt_triangulation project.cpp includes/utils/functions.cpp includes/utils/ant.cpp includes/utils/functions_task1.cpp)
+add_executable(opt_triangulation project.cpp functions.cpp ant.cpp functions_task1.cpp)
 
 add_to_cached_list( CGAL_EXECUTABLE_TARGETS opt_triangulation )
 

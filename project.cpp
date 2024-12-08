@@ -38,6 +38,10 @@ int main(int argc, char** argv) {
         return 1;
     }
     //Check the names of the test cases in folder tests
+    //f.e. ./opt_triangulation -i tests/test_SA.json -o solution_output.json
+    //./opt_triangulation -i tests/test_Ants.json -o solution_output.json
+    //./opt_triangulation -i tests/test_Local.json -o solution_output.json
+    
     read_json(input_path, jv);
 
     vector<Point_2> points;
@@ -140,9 +144,10 @@ int main(int argc, char** argv) {
     Custom_CDT simulated_cdt = custom_cdt;
     //Run task1 if delaunay parameter is false
     if(!delaunay) {
-        cout<<"Run task1"<<endl;
+        cout<<"**Run task1**"<<endl;
         run_task1(simulated_cdt, polygon);
         obtuses_faces = count_obtuse_triangles(simulated_cdt, polygon);
+        cout<<"Number of obtuses after task 1: "<<obtuses_faces<<endl;
         cout<<"Sum of steiners after task 1: "<<count_vertices(simulated_cdt) - initial_vertexes<<endl;
         if(init_obtuse_faces > 0) success = ((double)obtuses_faces/(double)init_obtuse_faces)*100;
         cout<<100-success<<"%"<<" obtuse triangles reduction success after task 1"<<endl;

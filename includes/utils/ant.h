@@ -1,12 +1,8 @@
 #ifndef ANT_H
 #define ANT_H
 
-#include "includes/utils/Custom_Constrained_Delaunay_triangulation_2.h"
-#include <vector>
-#include <set>
-#include <CGAL/Exact_predicates_exact_constructions_kernel.h>
-#include <CGAL/Polygon_2.h>
-#include "steiner_method.h"
+#include "libraries.h"
+
 using namespace std;
 using K = CGAL::Exact_predicates_exact_constructions_kernel;
 using Custom_CDT = Custom_Constrained_Delaunay_triangulation_2<K>;
@@ -14,7 +10,7 @@ using Polygon = CGAL::Polygon_2<K>;
 using Point_2 = K::Point_2;
 using Face_handle = Custom_CDT::Face_handle;
 using Segment_2 = K::Segment_2;
-#include "steiner_method.h"
+
 
 
 class Ant {

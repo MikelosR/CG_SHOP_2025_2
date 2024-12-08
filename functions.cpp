@@ -1,6 +1,5 @@
-#include "functions.h"
-#include "Custom_Constrained_Delaunay_triangulation_2.h"
-#include "extra_graphics.h"
+#include "includes/utils/functions.h"
+#include "includes/utils/extra_graphics.h"
 
 using namespace boost::json;
 using namespace std;
