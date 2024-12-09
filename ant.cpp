@@ -7,7 +7,7 @@ Ant::Ant(const Custom_CDT& initial_cdt): ant_cdt(initial_cdt), ant_energy(0.0), 
 
 Ant::Ant() :
     ant_cdt(Custom_CDT()),
-    ant_steiner_method(NUM_METHODS),  // Member initializer list for initialization
+    ant_steiner_method(NUM_METHODS),  //Member initializer list for initialization
     ant_energy(0.0),
     DeltaE(0.0),
     num_of_obtuses(-1),

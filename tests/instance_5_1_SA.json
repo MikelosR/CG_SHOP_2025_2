@@ -44,9 +44,8 @@
         2
     ],
     "num_constraints": 1,
-    "additional_constraints": [
-        [0,11]],
-        "method": "sa", 
-        "parameters": {"alpha": 2.4, "beta": 0.2, "L": 1750, "batch_size": 6 }, 
-        "delaunay": true
+    "additional_constraints": [[0,11]],
+    "method": "sa", 
+    "parameters": {"alpha": 2.4, "beta": 0.2, "L": 1450, "batch_size": 5 }, 
+    "delaunay": true
 }

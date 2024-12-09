@@ -43,20 +43,10 @@
     ],
     "num_constraints": 3,
     "additional_constraints": [
-        [
-            3,
-            8
-        ],
-        [
-            5,
-            10
-        ],
-        [
-            11,
-            10
-        ]
-    ],
+        [3,8],
+        [5,10],
+        [11,10]],
     "method": "sa", 
-    "parameters": {"alpha": 2.4, "beta": 0.2, "L": 1650, "batch_size": 6 }, 
+    "parameters": {"alpha": 2.4, "beta": 0.2, "L": 1450, "batch_size": 6 }, 
     "delaunay": true
 }

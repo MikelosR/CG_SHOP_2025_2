@@ -45,28 +45,12 @@
     ],
     "num_constraints": 5,
     "additional_constraints": [
-        [
-            1,
-            2
-        ],
-        [
-            3,
-            6
-        ],
-        [
-            4,
-            7
-        ],
-        [
-            5,
-            8
-        ],
-        [
-            9,
-            10
-        ]
-    ],
+        [1,2],
+        [3,6],
+        [4,7],
+        [5,8],
+        [9,10]],
     "method": "ant", 
-    "parameters": {"alpha": 2.4, "beta": 0.2, "xi": 1.0, "psi": 3.0, "lambda": 0.5, "kappa": 5, "L": 40},
-    "delaunay": false 
+    "parameters": {"alpha": 2.4, "beta": 0.2, "xi": 1.0, "psi": 2.0, "lambda": 0.2, "kappa": 5, "L": 40},
+    "delaunay": true 
 }

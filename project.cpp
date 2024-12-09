@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
     read_json(input_path, jv);
 
     vector<Point_2> points;
-    vector<std::pair<int, int>> additional_constraints;
+    vector<pair<int, int>> additional_constraints;
     vector<int> region_boundary;
     Polygon polygon;
     Polygon simulated_polygon;
@@ -114,7 +114,7 @@ int main(int argc, char** argv) {
         }
     }
     else {
-        cerr<<"Jv is not object: safe termination"<<endl;
+        cerr<<"Jv is not object: safe exit"<<endl;
         return 0;
     }
 
@@ -185,14 +185,15 @@ int main(int argc, char** argv) {
     CGAL::draw(simulated_cdt);
     //print_polygon_edges(simulated_polygon);
     
+    /*Print from Extra_Graphics*/
     //Calculate min_y and max_y
-    double min_y = std::numeric_limits<double>::max();
-    double max_y = std::numeric_limits<double>::lowest();
+    double min_y = numeric_limits<double>::max();
+    double max_y = numeric_limits<double>::lowest();
 
     for (const auto& point : points) {
         double y = CGAL::to_double(point.y());
-        min_y = std::min(min_y, y);
-        max_y = std::max(max_y, y);
+        min_y = min(min_y, y);
+        max_y = max(max_y, y);
     }
     QApplication app(argc, argv);
     CDTGraphicsView view(simulated_cdt, simulated_polygon);
@@ -208,7 +209,7 @@ int main(int argc, char** argv) {
     view.show();
     //////////// PHASE 3: JSON FILE OUTPUT //////////////////////////////
 
-    output_file(jv, simulated_cdt, points, obtuses_faces, output_path);
+    output(jv, simulated_cdt, points, obtuses_faces, output_path);
 
     return app.exec();
     //return 0;

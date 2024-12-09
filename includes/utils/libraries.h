@@ -30,7 +30,6 @@
 #include <stdio.h>
 
 
-
 enum SteinerMethod {
     CIRCUMCENTER,
     MIDPOINT_LONGEST_EDGE,
